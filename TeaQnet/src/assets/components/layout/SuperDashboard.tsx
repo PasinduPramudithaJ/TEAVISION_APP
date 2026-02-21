@@ -1,10 +1,11 @@
 import React, { JSX, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  FiLogOut, FiLayers, FiScissors,
-  FiServer, FiHome, FiSettings, FiCheckCircle, FiAlertCircle, FiActivity,
-  FiGrid, FiUsers, FiBarChart2, FiTool, FiShield, FiUser, FiTrendingUp, FiRefreshCw,
-  FiPlusSquare
+  FiLogOut, FiLayers,
+  FiHome, FiSettings, FiCheckCircle, FiAlertCircle, FiActivity,
+  FiUsers, FiBarChart2, FiTool, FiShield, FiUser, FiTrendingUp, FiRefreshCw,
+  FiBox,
+  
 } from "react-icons/fi";
 import Header from "./Header";
 import Footer from "./Footer";
@@ -32,14 +33,14 @@ interface FeatureBlock {
 }
 
 const featureBlocks: FeatureBlock[] = [
-  { label: "Single Predict", icon: <FiActivity />, route: "/dashboard", color: "success", description: "Perform prediction for a single tea liquor sample." },
-  { label: "Multi Predict", icon: <FiLayers />, route: "/multi", color: "primary", description: "Upload multiple images for batch prediction." },
-  { label: "Crop & Predict Tool", icon: <FiScissors />, route: "/crop", color: "info", description: "Crop and preprocess your images before prediction." },
-  { label: "RGB Analysis", icon: <FiTrendingUp />, route: "/rgb-analysis", color: "danger", description: "Get cropped images and calculate R, G, B mean values from raw tea images." },
-  { label: "Model Comparison", icon: <FiServer />, route: "/comparison", color: "secondary", description: "Compare different models and their performance." },
+  { label: "Feature Extraction", icon: <FiLayers />, route: "/feature_extraction", color: "primary", description: "Upload multiple images and extract features from them." },
+  { label: "Tea Region & Group Prediction", icon: <FiActivity />, route: "/tea_region_group_prediction", color: "success", description: "Perform prediction for a tea regions and groups." },
+  { label: "Combined Feature & Region and Group Prediction", icon: <FiBox />, route: "/combined_feature_region", color: "info", description: "Combined the feature extraction and region and group prediction" },
+  { label: "Combined Tea Pipeline", icon: <FiTrendingUp />, route: "/combined_tea_pipeline", color: "danger", description: "Combined tea Pipeline for automatic classification and prediction." },
+ // { label: "Model Comparison", icon: <FiServer />, route: "/comparison", color: "secondary", description: "Compare different models and their performance." },
   { label: "API Settings", icon: <FiSettings />, route: "/settings", color: "warning", description: "Change API and model settings (Admin Only)" },
-  { label: "Polyphenol Based Predict", icon: <FiGrid />, route: "/polyphenol", color: "success", description: "Predict polyphenol content from tea leaf images." },
-  { label: "Combined Pipeline", icon: <FiPlusSquare />, route: "/combined_tea_pipeline", color: "primary", description: "Run the full pipeline from feature extraction to prediction in one step." },
+ //{ label: "Polyphenol Based Predict", icon: <FiGrid />, route: "/polyphenol", color: "success", description: "Predict polyphenol content from tea leaf images." },
+ //{ label: "Combined Pipeline", icon: <FiPlusSquare />, route: "/combined_tea_pipeline", color: "primary", description: "Run the full pipeline from feature extraction to prediction in one step." },
   { label: "All Users History", icon: <FiBarChart2 />, route: "/admin/history", color: "pink", description: "View and manage all users' prediction history." },
   { label: "Home", icon: <FiHome />, route: "/", color: "dark", description: "Return to the main homepage. New features coming soon!" },
 ];

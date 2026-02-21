@@ -1302,7 +1302,166 @@ def login():
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
-#======================================================
+#======================ChatBot================================
+
+# ================= AI Chatbot ======================
+# ================= Region Info =======================
+models_dict = {}
+region_info = {
+    "Sabaragamuwa Region": {"description": "Strong aroma, dark color", "origin": "Sabaragamuwa", "flavorNotes": ["Malty","Earthy","Rich"]},
+    "Dimbula Region": {"description": "Balanced flavor, bright color", "origin": "Central Highlands", "flavorNotes": ["Floral","Light","Aromatic"]},
+    "Ruhuna Region": {"description": "Smooth taste, golden color", "origin": "Southern lowlands", "flavorNotes": ["Sweet","Mellow","Smooth"]},
+    "Nuwara Eliya Region": {"description": "Light, crisp flavor with floral notes", "origin": "Nuwara Eliya", "flavorNotes": ["Floral","Citrus","Bright"]},
+    "Uva Region": {"description": "Distinctive flavor with a hint of spice", "origin": "Uva Province", "flavorNotes": ["Spicy","Fruity","Bold"]},
+    "Kandy Region": {"description": "Rich aroma with a full-bodied flavor", "origin": "Kandy", "flavorNotes": ["Bold","Rich","Aromatic"]},
+    "Uda Pussellawa Region": {"description": "Mild flavor with a smooth finish", "origin": "Udapussellawa", "flavorNotes": ["Mild","Smooth","Delicate"]}
+}
+
+
+def get_tea_knowledge_base():
+    """Returns comprehensive knowledge about tea regions and classification"""
+    return {
+        "regions": list(region_info.keys()),
+        "region_details": region_info,
+        "models": list(models_dict.keys()),
+        "classification_info": {
+            "method": "Deep Learning using CNN models",
+            "input": "Tea liquor images (raw or preprocessed)",
+            "output": "Tea region classification with confidence scores",
+            "models_available": [
+                "ResNet18 - High accuracy, good for general use",
+                "EfficientNetB0 - Balanced performance and speed",
+                "MobileNetV2 - Fast inference, mobile-friendly",
+                "ShuffleNetV2 - Lightweight, efficient",
+                "SqueezeNet - Compact model",
+                "CustomCNN - Custom architecture"
+            ],
+            "image_types": {
+                "raw": "Original image with automatic circle detection and cropping",
+                "preprocessed": "Already cropped and processed image"
+            },
+            "polyphenol_method": "Uses Random Forest classifier based on absorbance and concentration data"
+        }
+    }
+
+def process_chatbot_message(message: str, knowledge_base: dict) -> str:
+    """Process user message and generate intelligent response"""
+    message_lower = message.lower().strip()
+    
+    # Greetings
+    if any(word in message_lower for word in ["hello", "hi", "hey", "greetings"]):
+        return "Hello! I'm your Tea Region Classification Assistant. I can help you understand tea regions, classification methods, models, and how to use the system. What would you like to know?"
+    
+    # Help/Commands
+    if any(word in message_lower for word in ["help", "commands", "what can you do"]):
+        return """I can help you with:
+• Information about tea regions (Dimbula, Ruhuna, Sabaragamuwa, etc.)
+• Explanation of classification models (ResNet18, EfficientNet, etc.)
+• How to use the prediction features
+• Understanding prediction results
+• Polyphenol-based classification
+• General questions about tea region classification
+
+Just ask me anything about tea regions or the classification system!"""
+    
+    # Tea regions
+    if any(word in message_lower for word in ["region", "regions", "what regions"]):
+        regions_list = ", ".join(knowledge_base["regions"])
+        return f"The system can classify tea into these regions: {regions_list}. Would you like to know more about a specific region?"
+    
+    # Specific region queries
+    for region_name, region_data in knowledge_base["region_details"].items():
+        if region_name.lower() in message_lower:
+            return f"""**{region_name}**
+• Description: {region_data['description']}
+• Origin: {region_data['origin']}
+• Flavor Notes: {', '.join(region_data['flavorNotes'])}"""
+    
+    # Models
+    if any(word in message_lower for word in ["model", "models", "which model", "best model"]):
+        models_info = knowledge_base["classification_info"]["models_available"]
+        return f"""Available Models:
+{chr(10).join(f'• {model}' for model in models_info)}
+
+ResNet18 is recommended for best accuracy. MobileNetV2 is good for faster predictions."""
+    
+    # How to use
+    if any(word in message_lower for word in ["how to", "how do i", "use", "predict", "classification"]):
+        return """To classify tea regions:
+1. Go to Dashboard or Multiple Predict
+2. Upload a tea liquor image (raw or preprocessed)
+3. Select a model (ResNet18 recommended)
+4. Choose image type (raw = auto-crop, preprocessed = already cropped)
+5. Click Predict
+6. View results with confidence scores and region information
+
+You can also:
+• Compare multiple models
+• Predict multiple images at once
+• Use polyphenol data for classification"""
+    
+    # Image types
+    if any(word in message_lower for word in ["image type", "raw", "preprocessed", "difference"]):
+        types = knowledge_base["classification_info"]["image_types"]
+        return f"""Image Types:
+• **Raw**: Original image - system automatically detects and crops the tea circle
+• **Preprocessed**: Already cropped image - faster processing
+
+Use raw for convenience, preprocessed if you've already cropped the image."""
+    
+    # Polyphenol
+    if any(word in message_lower for word in ["polyphenol", "absorbance", "concentration"]):
+        return """Polyphenol-based Classification:
+• Uses Random Forest model
+• Requires absorbance and concentration data
+• Upload CSV file or enter data manually
+• Provides region predictions based on chemical analysis
+• Alternative to image-based classification"""
+    
+    # Confidence/Accuracy
+    if any(word in message_lower for word in ["confidence", "accuracy", "reliable", "trust"]):
+        return """Confidence scores indicate prediction reliability:
+• 90-100%: Very high confidence
+• 70-89%: Good confidence
+• 50-69%: Moderate confidence
+• Below 50%: Low confidence - consider retaking image
+
+Higher confidence = more reliable prediction. ResNet18 typically provides highest accuracy."""
+    
+    # Default response
+    return """I'm here to help with tea region classification! You can ask me about:
+• Tea regions and their characteristics
+• Classification models and their features
+• How to use the prediction system
+• Understanding your results
+• Polyphenol-based classification
+
+Try asking: "What regions can be classified?" or "Which model should I use?"""
+
+@app.route("/api/chatbot", methods=["POST"])
+def chatbot():
+    """AI Chatbot endpoint for tea region classification assistance"""
+    try:
+        data = request.get_json()
+        message = data.get("message", "").strip()
+        
+        if not message:
+            return jsonify({"error": "Message is required"}), 400
+        
+        knowledge_base = get_tea_knowledge_base()
+        response = process_chatbot_message(message, knowledge_base)
+        
+        return jsonify({
+            "response": response,
+            "timestamp": datetime.now().isoformat()
+        }), 200
+        
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
+
+#=======================================================
 def get_local_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:

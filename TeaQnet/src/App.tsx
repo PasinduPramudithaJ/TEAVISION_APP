@@ -54,11 +54,16 @@ const ProtectedRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
     return <Navigate to="/login" replace />;
   }
 
-  // Restrict access to /super
-  if (location.pathname === "/super" && !isAdmin) {
-    return <Navigate to="/dashboard" replace />;
+  // 🔥 Allow everyone to access combined_tea_pipeline
+  if (location.pathname === "/combined_tea_pipeline") {
+    return children;
   }
-  // Otherwise allow
+
+  // 🔴 If NOT admin → redirect everything else
+  if (!isAdmin) {
+    return <Navigate to="/combined_tea_pipeline" replace />;
+  }
+
   return children;
 };
 

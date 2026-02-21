@@ -365,7 +365,7 @@ def check_dependencies():
         print("📦 Checking backend Python dependencies...")
         if not check_and_install_python_dependencies(requirements_file):
             print("❌ Failed to install backend dependencies")
-            print("   Try installing manually: pip install -r Tea_Region_Classifier/requirements.txt")
+            print("   Try installing manually: pip install -r Teavision/requirements.txt")
             return False
     else:
         print("⚠️  requirements.txt not found in backend directory")

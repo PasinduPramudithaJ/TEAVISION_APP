@@ -95,7 +95,7 @@ docker-compose -f docker-compose.dev.yml up --build
 .
 ├── docker-compose.yml          # Production orchestration
 ├── docker-compose.dev.yml      # Development orchestration
-├── Tea_Region_Classifier/
+├── Teavision/
 │   ├── Dockerfile              # Production backend image
 │   ├── Dockerfile.dev          # Development backend image
 │   └── .dockerignore
@@ -112,21 +112,21 @@ docker-compose -f docker-compose.dev.yml up --build
 
 **Linux/Mac (Bash):**
 ```bash
-cd Tea_Region_Classifier
+cd Teavision
 docker build -t teaqnet-backend .
 docker run -p 5000:5000 teaqnet-backend
 ```
 
 **Windows (PowerShell):**
 ```powershell
-cd Tea_Region_Classifier
+cd Teavision
 docker build -t teaqnet-backend .
 docker run -p 5000:5000 teaqnet-backend
 ```
 
 **Windows (CMD):**
 ```cmd
-cd Tea_Region_Classifier
+cd Teavision
 docker build -t teaqnet-backend .
 docker run -p 5000:5000 teaqnet-backend
 ```
@@ -151,10 +151,10 @@ docker run -p 80:80 teaqnet-frontend
 
 The `docker-compose.yml` mounts the following directories for data persistence:
 
-- `./Tea_Region_Classifier/uploads` - User uploaded images
-- `./Tea_Region_Classifier/profile_pictures` - User profile pictures
-- `./Tea_Region_Classifier/users.db` - SQLite database
-- `./Tea_Region_Classifier/models` - ML models (read-only)
+- `./Teavision/uploads` - User uploaded images
+- `./Teavision/profile_pictures` - User profile pictures
+- `./Teavision/users.db` - SQLite database
+- `./Teavision/models` - ML models (read-only)
 
 **Important**: Ensure these directories exist before starting containers, or they will be created automatically.
 
@@ -201,8 +201,8 @@ Most Docker commands work identically in both PowerShell and CMD. However, Power
 ### Path Handling
 
 Windows uses backslashes (`\`) for paths, but Docker Compose accepts both:
-- `./Tea_Region_Classifier` (works in all shells)
-- `.\Tea_Region_Classifier` (Windows-specific, also works)
+- `./Teavision` (works in all shells)
+- `.\Teavision` (Windows-specific, also works)
 
 ### Line Endings
 
@@ -277,7 +277,7 @@ If you encounter permission issues with volumes:
 **PowerShell (Run as Administrator):**
 ```powershell
 # Grant Docker access to the directory
-icacls "C:\Development\Sprints\UOK\TEAQNET_APP\Tea_Region_Classifier" /grant "NT AUTHORITY\SYSTEM:(OI)(CI)F" /T
+icacls "C:\Development\Sprints\UOK\TEAQNET_APP\Teavision" /grant "NT AUTHORITY\SYSTEM:(OI)(CI)F" /T
 ```
 
 **Alternative**: Use Docker Desktop's file sharing settings:

@@ -1,20 +1,20 @@
 services:
   backend:
     build:
-      context: ./Tea_Region_Classifier
+      context: ./Teavision
       dockerfile: Dockerfile
-    container_name: teaqnet-backend
+    container_name: pasindupramudithajayasekara/teavision_app-backend:latest
     ports:
       - "5000:5000"
     volumes:
       # Mount models directory (read-only) - adjust if models are large
-      - ./Tea_Region_Classifier/models:/app/models:ro
+      - ./Teavision/models:/app/models:ro
       # Mount uploads directory for persistence
-      - ./Tea_Region_Classifier/uploads:/app/uploads
+      - ./Teavision/uploads:/app/uploads
       # Mount profile pictures directory for persistence
-      - ./Tea_Region_Classifier/profile_pictures:/app/profile_pictures
+      - ./Teavision/profile_pictures:/app/profile_pictures
       # Mount database for persistence
-      - ./Tea_Region_Classifier/users.db:/app/users.db
+      - ./Teavision/users.db:/app/users.db
     environment:
       - FLASK_ENV=production
       - PYTHONUNBUFFERED=1
@@ -32,7 +32,7 @@ services:
     build:
       context: ./TeaQnet
       dockerfile: Dockerfile
-    container_name: teaqnet-frontend
+    container_name: pasindupramudithajayasekara/teavision_app-frontend:latest
     ports:
       - "80:80"
     depends_on:
