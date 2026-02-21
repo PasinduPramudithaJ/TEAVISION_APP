@@ -3,7 +3,7 @@ services:
     build:
       context: ./Teavision
       dockerfile: Dockerfile
-    container_name: pasindupramudithajayasekara/teavision_app-backend
+    container_name: teavision_app-backend
     ports:
       - "5000:5000"
     volumes:
@@ -32,7 +32,7 @@ services:
     build:
       context: ./TeaQnet
       dockerfile: Dockerfile
-    container_name: pasindupramudithajayasekara/teavision_app-frontend
+    container_name: teavision_app-frontend
     ports:
       - "80:80"
     depends_on:
