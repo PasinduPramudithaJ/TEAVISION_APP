@@ -1,0 +1,46 @@
+# Development docker-compose file with hot-reload capabilities
+# Use this for development: docker-compose -f docker-compose.dev.yml up
+
+services:
+  backend:
+    build:
+      context: ./Tea_Region_Classifier
+      dockerfile: Dockerfile.dev
+    container_name: teaqnet-backend-dev
+    ports:
+      - "5000:5000"
+    volumes:
+      # Mount source code for hot-reload
+      - ./Tea_Region_Classifier:/app
+      # Mount models directory (read-only)
+      - ./Tea_Region_Classifier/models:/app/models:ro
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    networks:
+      - teaqnet-network
+
+  frontend:
+    build:
+      context: ./TeaQnet
+      dockerfile: Dockerfile.dev
+    container_name: teaqnet-frontend-dev
+    ports:
+      - "5173:5173"
+    volumes:
+      # Mount source code for hot-reload
+      - ./TeaQnet:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - teaqnet-network
+
+networks:
+  teaqnet-network:
+    driver: bridge

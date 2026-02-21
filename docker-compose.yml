@@ -1,0 +1,59 @@
+services:
+  backend:
+    build:
+      context: ./Tea_Region_Classifier
+      dockerfile: Dockerfile
+    container_name: teaqnet-backend
+    ports:
+      - "5000:5000"
+    volumes:
+      # Mount models directory (read-only) - adjust if models are large
+      - ./Tea_Region_Classifier/models:/app/models:ro
+      # Mount uploads directory for persistence
+      - ./Tea_Region_Classifier/uploads:/app/uploads
+      # Mount profile pictures directory for persistence
+      - ./Tea_Region_Classifier/profile_pictures:/app/profile_pictures
+      # Mount database for persistence
+      - ./Tea_Region_Classifier/users.db:/app/users.db
+    environment:
+      - FLASK_ENV=production
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - teaqnet-network
+
+  frontend:
+    build:
+      context: ./TeaQnet
+      dockerfile: Dockerfile
+    container_name: teaqnet-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - teaqnet-network
+
+networks:
+  teaqnet-network:
+    driver: bridge
+
+volumes:
+  uploads:
+  profile_pictures:
+  users_db:
+
