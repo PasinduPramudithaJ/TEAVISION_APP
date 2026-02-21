@@ -18,7 +18,7 @@ COPY requirements.txt .
 # Install Python dependencies
 # Use opencv-python-headless instead of opencv-python (no GUI libs needed in Docker)
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir Flask Flask-Cors torch torchvision Pillow numpy pandas joblib werkzeug scikit-learn matplotlib seaborn && \
+    pip install --no-cache-dir Flask Flask-Cors torch torchvision Pillow numpy pandas joblib werkzeug scikit-learn matplotlib seaborn waitress && \
     pip install --no-cache-dir opencv-python-headless
 
 # Copy application code
