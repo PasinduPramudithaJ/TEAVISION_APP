@@ -105,8 +105,10 @@ const CombinedFeatureRegion: React.FC = () => {
       const formData = new FormData();
       files.forEach(f => {
         const region = getRegionName(f.name);
+        const user = JSON.parse(localStorage.getItem("user") || "{}");
         formData.append("images", f);
         formData.append("regions", region);
+        formData.append("user_email", user.email);
       });
       //formData.append("output_csv", outputCsvName);
 

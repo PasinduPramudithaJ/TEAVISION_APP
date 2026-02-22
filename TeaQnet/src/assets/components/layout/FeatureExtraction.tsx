@@ -49,8 +49,10 @@ const FeatureExtraction: React.FC = () => {
       files.forEach((f) => {
         // Add region info as extra field for each image
         const region = getRegionName(f.name);
+        const user = JSON.parse(localStorage.getItem("user") || "{}");
         formData.append("images", f);
         formData.append("regions", region);
+        formData.append("user_email", user.email);
       });
       formData.append("output_csv", outputCsvName);
 
