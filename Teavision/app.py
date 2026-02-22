@@ -16,6 +16,13 @@ from flask import Flask, json, request, jsonify, send_file
 from sklearn import logger
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
 from waitress import serve
 import warnings
 from sklearn.exceptions import InconsistentVersionWarning
@@ -1060,6 +1067,17 @@ def extract_features_api():
 
         output_csv_path = os.path.join(temp_dir, output_csv_name)
         df.to_csv(output_csv_path, index=False)
+        user_email = request.form.get("user_email")  # logged-in user email
+        # --- Usage ---
+        if user_email:
+            send_gmail(
+                sender_email="teaqnetapp@gmail.com",
+                app_password="emep vqcm ysmu sbko",  # Generate this in Google Account → Security → App Passwords
+                receiver_email=user_email,
+                subject="Tea Vision Results",
+                message_text=f"Hello,\n\nYour Tea Vision analysis results are ready. Please find the attached CSV file.\n\nRegards\n\nYour CSV '{output_csv_path}'",
+                attachment_path=output_csv_path
+            )
 
         # Send CSV file back
         response = send_file(output_csv_path, as_attachment=True)
@@ -1459,6 +1477,41 @@ def chatbot():
     except Exception as e:
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
+
+#=======================================================
+def send_gmail(sender_email, app_password, receiver_email, subject, message_text, attachment_path=None):
+    # Create message
+    msg = MIMEMultipart()
+    msg['From'] = sender_email
+    msg['To'] = receiver_email
+    msg['Subject'] = subject
+    msg.attach(MIMEText(message_text, 'plain'))
+
+     # Attach message text
+    msg.attach(MIMEText(message_text, 'plain'))
+
+    # Attach file if provided
+    if attachment_path and os.path.exists(attachment_path):
+        with open(attachment_path, 'rb') as f:
+            part = MIMEBase('application', 'octet-stream')
+            part.set_payload(f.read())
+        encoders.encode_base64(part)
+        part.add_header('Content-Disposition', f'attachment; filename="{os.path.basename(attachment_path)}"')
+        msg.attach(part)
+
+
+    try:
+        # Connect to Gmail SMTP server
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()  # Secure connection
+        server.login(sender_email, app_password)
+        server.send_message(msg)
+        server.quit()
+        print("✅ Email sent successfully!")
+
+    except Exception as e:
+        print("❌ Error:", e)
+
 
 
 #=======================================================

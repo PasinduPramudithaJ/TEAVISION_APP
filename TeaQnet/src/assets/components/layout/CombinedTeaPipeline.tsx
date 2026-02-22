@@ -128,8 +128,10 @@ const CombinedTeaPipeline: React.FC = () => {
       const formData = new FormData();
       processedFiles.forEach(f => {
         const region = getRegionName(f.name);
+        const user = JSON.parse(localStorage.getItem("user") || "{}");
         formData.append("images", f);
         formData.append("regions", region);
+        formData.append("user_email", user.email);
       });
 
       const res = await fetch(`${apiUrl}/extract_features`, { method: "POST", body: formData });
