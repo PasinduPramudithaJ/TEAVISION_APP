@@ -1318,6 +1318,81 @@ def register():
             profile_picture_url = None
         
         conn.close()
+        user_email = email  # logged-in user email
+        current_year = datetime.now().year
+        raw_name = user_email.split('@')[0]
+        user_name = raw_name.replace('.', ' ').replace('_', ' ').title()
+        # --- Usage ---
+        if user_email:
+         send_gmail(
+        sender_email="teaqnetapp@gmail.com",
+        app_password="emep vqcm ysmu sbko",
+        receiver_email=email,
+        subject=f"User Registration Successful - Welcome to TeaQNet!",
+        message_text=f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <style>
+            .container {{ 
+                max-width: 600px; margin: 0 auto; 
+                font-family: 'Segoe UI', Arial, sans-serif; 
+                background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 12px;
+                overflow: hidden;
+            }}
+            .header {{ 
+                background-color: #1a5c2d; color: #ffffff; 
+                padding: 30px; text-align: center;
+            }}
+            .noreply-banner {{
+                background-color: #fff3cd; color: #856404;
+                padding: 10px; text-align: center; font-size: 12px;
+                border-bottom: 1px solid #ffeeba;
+            }}
+            .body {{ padding: 30px; color: #333333; line-height: 1.6; }}
+            .report-box {{
+                background-color: #f1f8f4; border-radius: 8px;
+                padding: 20px; margin: 20px 0; border: 1px solid #d4edda;
+            }}
+            .btn {{
+                display: block; width: fit-content; margin: 25px auto; 
+                padding: 14px 30px; background-color: #ffc107; 
+                color: #000000 !important; text-decoration: none;
+                font-weight: bold; border-radius: 6px;
+            }}
+            .footer {{ 
+                background-color: #f8f9fa; text-align: center; 
+                font-size: 12px; color: #999; padding: 25px;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1 style="margin:0;">TeaVision</h1>
+                <p style="margin:5px 0 0; opacity:0.8;">Expert-Level Tea Grading</p>
+            </div>
+
+            <div class="body">
+                <h2>Hello {user_name},</h2>
+                <p>Welcome to TeaQNet! Your AI-powered tea quality assessment platform is now ready for use. Our deep learning model has real-time capabilities to analyze and grade tea samples with precision.</p>
+                <p style="font-size: 13px; color: #666;">
+                    Start exploring your tea quality insights today!
+                </p>
+            </div>
+
+            <div class="footer">
+                <p><strong>TeaQNet App &copy; {current_year}</strong><br>
+                Revolutionizing Tea Quality through Deep Learning</p>
+                <hr style="border:0; border-top:1px solid #ddd; width:50%;">
+                <p><em>Note: This mailbox is not monitored. Replies to this address will not be read.</em></p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+    )
+
         
         return jsonify({
             "message": "User registered successfully",
