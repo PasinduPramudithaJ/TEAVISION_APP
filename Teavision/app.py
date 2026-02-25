@@ -1677,9 +1677,8 @@ def get_local_ip():
     return ip
 
 if __name__ == "__main__":
-    local_ip = get_local_ip()
-    print(f"✅ Server running on:")
-    print(f"  Localhost: http://127.0.0.1:5000")
-    print(f"  Network:   http://{local_ip}:5000")
-    print("🚀 Starting server on http://0.0.0.0:5000 ...")
-    serve(app, host="0.0.0.0", port=5000, threads=5)
+     local_ip = get_local_ip()
+     print(f"✅ Server running on:")
+     print(f"  Localhost: http://127.0.0.1:5000")
+     print(f"  Network:   http://{local_ip}:5000")
+     app.run(host="0.0.0.0", port=5000, debug=False, threaded=True)
